@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic QR Manager</title>
+  <meta name="description" content="Generate, sell, and manage dynamic QR codes that redirect to any URL — change the destination anytime without reprinting." />
+  <link rel="stylesheet" href="/static/style.css?v=3.0" />
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<!-- ── Assign / Edit Modal ──────────────────────────────────────────────── -->
+<div id="modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-title">Assign URL</div>
+        <div class="modal-subtitle" id="modal-subtitle"></div>
+      </div>
+      <button type="button" id="modal-close" class="modal-close" aria-label="Close">✕</button>
+    </div>
+
+    <form id="modal-form" class="modal-body">
+      <!-- QR Preview -->
+      <div class="qr-preview-row">
+        <img id="modal-thumb" class="qr-preview-thumb" src="" alt="QR Preview" />
+        <div class="qr-preview-info">
+          <small>Short code</small><br>
+          <code id="modal-code"></code><br>
+          <small>Redirect link</small><br>
+          <code id="modal-redirect" style="font-size:0.7rem;color:var(--text-mid);word-break:break-all;"></code>
+        </div>
+      </div>
+
+      <!-- Label (only on assign) -->
+      <div id="modal-label-row" class="field">
+        <label for="modal-label">Label (optional)</label>
+        <input id="modal-label" type="text" placeholder="e.g. Curry House Bandra" autocomplete="off" />
+      </div>
+
+      <!-- Target URL -->
+      <div class="field">
+        <label for="modal-url">Target URL *</label>
+        <input id="modal-url" type="text" placeholder="https://g.page/r/.../review or https://myshop.com" required autocomplete="off" />
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="window.app ? window.app.closeModal() : document.getElementById('modal-overlay').classList.remove('open')">Cancel</button>
+        <button id="modal-save-btn" type="submit" class="btn btn-primary">Activate QR</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── Main app ──────────────────────────────────────────────────────────── -->
+<div class="app-wrapper">
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-badge">⚡ Dynamic QR Manager</div>
+    <h1>QR Codes That<br>Never Go Stale</h1>
+    <p>Generate once, print &amp; sell, redirect anywhere — update the destination anytime.</p>
+  </header>
+
+  <!-- Stats bar -->
+  <div class="stats-bar">
+    <div class="stat-pill">Total <strong id="stat-total">0</strong></div>
+    <div class="stat-pill" style="color:var(--success)">Active <strong id="stat-active">0</strong></div>
+    <div class="stat-pill">Unassigned <strong id="stat-unassigned">0</strong></div>
+    <div class="stat-pill" style="color:var(--accent-2)">Total Scans <strong id="stat-scans">0</strong></div>
+  </div>
+
+  <!-- ── Generator panel ────────────────────────────────────────────────── -->
+  <section class="section" aria-labelledby="gen-heading">
+    <div class="section-title" id="gen-heading"><span>🎲</span> Bulk Generate QR Codes</div>
+    <div class="generator-panel">
+      <form id="gen-form">
+        <div class="gen-row">
+          <div class="field">
+            <label for="gen-prefix">Label Prefix</label>
+            <input id="gen-prefix" type="text" value="Shop" placeholder="Shop, Cafe, Store…" />
+          </div>
+          <div class="field">
+            <label for="gen-count">How Many</label>
+            <input id="gen-count" type="number" value="5" min="1" max="500" />
+          </div>
+          <button id="btn-generate" class="btn btn-primary" type="submit">⚡ Generate</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ── QR Inventory ────────────────────────────────────────────────────── -->
+  <section class="section" aria-labelledby="inventory-heading">
+    <div class="section-title" id="inventory-heading"><span>📦</span> QR Inventory</div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <!-- Filter tabs -->
+      <div class="tabs" role="tablist" aria-label="Filter by status">
+        <button class="tab active" role="tab" data-status="">All</button>
+        <button class="tab" role="tab" data-status="UNASSIGNED">Unassigned</button>
+        <button class="tab" role="tab" data-status="ACTIVE">Active</button>
+        <button class="tab" role="tab" data-status="INACTIVE">Paused</button>
+        <button class="tab" role="tab" data-status="EXPIRED">Expired</button>
+      </div>
+      <!-- Download ZIP -->
+      <div class="toolbar-right">
+        <button id="btn-download-zip" class="btn btn-ghost">⬇️ Download ZIP</button>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div id="qr-grid" class="qr-grid">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M17 17h3v3M14 20h3"/>
+        </svg>
+        <p>No QR codes yet.<br>Use the generator above to get started!</p>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /.app-wrapper -->
+
+<script src="/static/app.js?v=3.0"></script>
+</body>
+</html>
+
